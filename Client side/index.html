@@ -9,23 +9,76 @@
 
 </head>
 <body>
-
     <nav class = "navbar bg-body-tertiary">
         <div class="container-fluid"></div>
-        <h1 class="navbar-brand mb-0 h1">ReelReview
-        </h1>
+        <h1 class="navbar-brand mb-0 h1" style = "font-size: xx-large;padding-left: 5%;">ReelReview</h1>
      </div>
     </nav>
+
     
 
-    <div class = "container text-center" id = root-container>
-        <div class = "row" style = "border: 2px solid blue;">
-            <p>Explore your favourite films below</p>
+    <hr class = "separator-line">
+
+    <div class = "container text-center"  style = "padding-right:15%;padding-left: 5%;">
+        <div class = "row"  >
+            
+            <div class = "col-sm-8 align-self-center" style = "font-size: xx-large;">
+                Films • Directors • Reviews
+            </div>
+            <div class = "col-sm-4 align-self-center">
+                
+                    <div class="dropdown" id = "director_dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"role="button">
+                    Filter by director
+                    </button>
+                    <ul class = "dropdown-menu">
+                    <li><button class = "dropdown-item" href="">All</button></li>
+                    <li><hr class = "dropdown-divider"></li>
+                    <li><button class = "dropdown-item" onclick="update_director('Christopher Nolan');">Christopher Nolan</button></li>
+                    <li><button class = "dropdown-item" href="">Steven Spielberg</button></li>
+                    <li><button class = "dropdown-item" href="">Martin Scorsese</button></li>
+                    <li><a class = ""></a></li>
+                    </ul>
+            </div>
+    
+
+            </div>
         </div>
     </div>
-    
-    
+    <hr class = "separator-line">
 
-    <script src = "js/bootstrap.js"></script>
+
+    <div class = "container text-center" id ="director_info">
+        <div class="row">
+            <div class = "col-sm-4 align-self-center" style = "font-size:medium;">
+                
+                
+                <img src="images/Christopher_Nolan_Cannes_2018.jpg.webp" alt = "director_img" height="250px"width="200px" id= "director_image">
+
+                <p>Image sourced from : </p>
+
+            </div>
+            <div class = "col-sm-8 align-self-center">
+                <div class = "container text-center">
+                    <div class = "row align-self-center" style = "padding: 15px;">
+                        <p id = "director_description">Sir Christopher Edward Nolan (born 30 July 1970) is a British and American filmmaker. Known for his Hollywood blockbusters, he is considered a leading filmmaker of the 21st century. Nolan's films have earned over $6 billion worldwide, making him the seventh-highest-grossing film director. His accolades include two Academy Awards, a Golden Globe Award and two British Academy Film Awards.</p>
+                    </div>
+                    <div class = "row align-self-center">
+                        <div class = "col-sm-12 align-self-center">
+                            <p>Average star rating : </p>
+                            <img src="images/1stars.png" height="75px" width="300px" id="average_rating_image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+
+
+    <hr class = "separator-line">
+    <script src = "js/bootstrap.bundle.js"></script>
+    <script src = "index.js"></script>
 </body>
 </html>
