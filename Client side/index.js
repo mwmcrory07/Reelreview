@@ -60,14 +60,28 @@ class Review{
 
 
 
-let current_director = null;
+function clear_director(){
+    const director_div = document.getElementById("director_info");
+    const director_bar = document.getElementById("director_bar");
+    director_div.style.display = "none";
+    
+    director_bar.style.display = "none";
+
+}
 
 
 
 function update_director(name){
+    const director_div = document.getElementById("director_info");
+    const director_bar = document.getElementById("director_bar");
+    director_div.style.display = "block";
+    
+    director_bar.style.display = "block";
+
+
     let found = false;
     let pointer = 0;
-    while (found == False){
+    while (found == false){
         if (directors[pointer].get_name() == name){
             found = true;
         }
@@ -91,16 +105,21 @@ function update_director(name){
 
 
     const average_rating_image = document.getElementById("average_rating_image");
-    director_image.src = stars_dictionary[director.get_average_rating()];
+    average_rating_image.src = stars_dictionary[director.get_average_rating()];
 
+    console.log("Hello")
+  
 }
 
-christopher_nolan = new Director("Christopher Nolan","#","#");
+let current_director = null;
+
+christopher_nolan = new Director("Christopher Nolan","images/Christopher_Nolan_Cannes_2018.jpg.webp","Sir Christopher Edward Nolan (born 30 July 1970) is a British and American filmmaker. Known for his Hollywood blockbusters, he is considered a leading filmmaker of the 21st century. Nolan's films have earned over $6 billion worldwide, making him the seventh-highest-grossing film director. His accolades include two Academy Awards, a Golden Globe Award and two British Academy Film Awards.",2);
 
 interstellar = new Film("Interstellar","#","Christopher Nolan");
 
 interstellar_review = new Review("Interstellar","dwqd",5);
 
-console.log(review);
 
 const directors = [christopher_nolan];
+
+clear_director()

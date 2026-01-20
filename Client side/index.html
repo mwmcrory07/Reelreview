@@ -32,12 +32,11 @@
                     Filter by director
                     </button>
                     <ul class = "dropdown-menu">
-                    <li><button class = "dropdown-item" href="">All</button></li>
+                    <li><button class = "dropdown-item" onclick="clear_director()">All</button></li>
                     <li><hr class = "dropdown-divider"></li>
-                    <li><button class = "dropdown-item" onclick="update_director('Christopher Nolan');">Christopher Nolan</button></li>
+                    <li><button class = "dropdown-item" onclick="update_director('Christopher Nolan')">Christopher Nolan</button></li>
                     <li><button class = "dropdown-item" href="">Steven Spielberg</button></li>
                     <li><button class = "dropdown-item" href="">Martin Scorsese</button></li>
-                    <li><a class = ""></a></li>
                     </ul>
             </div>
     
@@ -61,7 +60,7 @@
             <div class = "col-sm-8 align-self-center">
                 <div class = "container text-center">
                     <div class = "row align-self-center" style = "padding: 15px;">
-                        <p id = "director_description">Sir Christopher Edward Nolan (born 30 July 1970) is a British and American filmmaker. Known for his Hollywood blockbusters, he is considered a leading filmmaker of the 21st century. Nolan's films have earned over $6 billion worldwide, making him the seventh-highest-grossing film director. His accolades include two Academy Awards, a Golden Globe Award and two British Academy Film Awards.</p>
+                        <p id = "director_description"></p>
                     </div>
                     <div class = "row align-self-center">
                         <div class = "col-sm-12 align-self-center">
@@ -76,8 +75,15 @@
         
     </div>
 
+    <div class  = "container text-center" id ="films_grid">
 
-    <hr class = "separator-line">
+
+
+        
+    </div>
+
+
+    <hr class = "separator-line" id = "director_bar">
     <script src = "js/bootstrap.bundle.js"></script>
     <script src = "index.js"></script>
 </body>
