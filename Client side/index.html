@@ -4,11 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="mystyles.css">
 
 </head>
+
+
 <body>
+    <div class="modal fade" tabindex="-1" id = "review_modal">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Review this film</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class = "row">
+            <div class = "col-sm text-center">
+                <p>Give a comment on the film</p>
+                <select class="form-select" aria-label="Default select example">
+                <option value = "0">I loved this film</option>
+                <option value = "1" >This film was enjoyable</option>
+                <option value = "2" >This film was good but not really the type of film I enjoy</option>
+                <option value = "3">I didn't like this film</option>
+                </select>
+            </div>
+            <div class = "col-sm text-center">
+
+                <p>Give a star rating to contribute to this film's average rating :</p>
+
+                <span onclick="update_stars(1)" class="star" id = "star1">★</span>
+                <span onclick="update_stars(2)" class="star" id = "star2">★</span>
+                <span onclick="update_stars(3)" class="star" id = "star3">★</span>
+                <span onclick="update_stars(4)" class="star" id = "star4">★</span>
+                <span onclick="update_stars(5)" class="star" id = "star5">★</span>
+
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger">Save changes</button>
+      </div>
+    </div>
+    </div>
+    </div>
     <nav class = "navbar bg-body-tertiary">
         <div class="container-fluid"></div>
         <h1 class="navbar-brand mb-0 h1" style = "font-size: xx-large;padding-left: 5%;">ReelReview</h1>
@@ -75,16 +115,18 @@
         
     </div>
 
-    <div class  = "container text-center" id ="films_grid">
 
-
-
-        
-    </div>
 
 
     <hr class = "separator-line" id = "director_bar">
-    <script src = "js/bootstrap.bundle.js"></script>
+
+
+
+    <div class  = "container text-center" id ="films_grid"></div>
+
+    
+ 
+    <script src = "bootstrap/js/bootstrap.bundle.js"></script>
     <script src = "index.js"></script>
 </body>
 </html>

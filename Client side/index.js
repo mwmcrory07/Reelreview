@@ -26,34 +26,64 @@ class Director {
 
 
 class Film {
-    constructor(title,image,director){
+    constructor(title,image,director,average_rating,img_src){
         this.title = title
         this.image = image
         this.director = director
         this.reviews = []
-        this.average_rating = 0
+        this.average_rating = average_rating
+        this.img_src = img_src
     }
 
     add_review(review){
-        this.ratings.push(review)
+        this.reviews.push(review)
     }
 
     calc_average_rating(){
         let sum = 0
-        for(i=0;i<(this.ratings.length);i++){
-            sum += this.ratings[i]
+        for(i=0;i<(this.reviews.length);i++){
+            sum += this.reviews[i]
         }
         this.average_rating = sum / this.ratings.length
     }
 
+    get_title(){
+        return this.title
+    }
+    get_image(){
+        return this.image
+    }
+    get_director(){
+        return this.director
+    }
+    get_average_rating(){
+        return this.average_rating
+    }
+    get_reviews(){
+        return this.reviews;
+    }
+    get_latest_review(){
+        return this.reviews[this.reviews.length-1]
+    }
+    get_img_src(){
+        return this.img_src
+    }
+    add_review(review){
+        this.reviews.push(review);
+
+    }
 }
 
 
 class Review{
     constructor(film,review,rating){
-        this.film = film
-        this.review = review
-        this.rating = rating
+        this.film = film;
+        this.review = review;
+        this.rating = rating;
+    }
+
+    get_review(){
+        return this.review;
     }
 
 }
@@ -74,9 +104,7 @@ function clear_director(){
 function update_director(name){
     const director_div = document.getElementById("director_info");
     const director_bar = document.getElementById("director_bar");
-    director_div.style.display = "block";
-    
-    director_bar.style.display = "block";
+
 
 
     let found = false;
@@ -87,13 +115,6 @@ function update_director(name){
         }
 
     }
-    let stars_dictionary = {};
-    stars_dictionary[0] = "images/0stars.png";
-    stars_dictionary[1] = "images/1stars.png";
-    stars_dictionary[2] = "images/2stars.png";
-    stars_dictionary[3] = "images/3stars.png";
-    stars_dictionary[4] = "images/4stars.png";
-    stars_dictionary[5] = "images/5stars.png";
 
     let director = directors[pointer];
 
@@ -107,19 +128,185 @@ function update_director(name){
     const average_rating_image = document.getElementById("average_rating_image");
     average_rating_image.src = stars_dictionary[director.get_average_rating()];
 
-    console.log("Hello")
+    director_div.style.display = "block";
+    
+    director_bar.style.display = "block";
+    
   
 }
 
+
+function show_films(films){
+    let counter = 2;
+    let i = 0;
+    const films_grid =  document.getElementById("films_grid");
+    let current_row = null
+    for (i = 0; i<films.length;i++){
+        let film = films[i]
+        if (counter == 2) {
+            counter = 1;
+            const row = document.createElement("div");
+            row.classList.add("row","gx-3");
+            
+            current_row = row;
+            films_grid.appendChild(row);
+        }
+
+        const film_col = document.createElement("div");
+        film_col.classList.add("col-lg-6","align-self-center");
+        current_row.appendChild(film_col);
+
+        const film_container  = document.createElement("div");
+        film_container.classList.add("film_container");
+        film_col.appendChild(film_container);
+        
+
+
+        const top_row  = document.createElement("div");
+        top_row.classList.add("row");
+        film_container.appendChild(top_row);
+
+
+        const image_col = document.createElement("div");
+        image_col.classList.add("col-sm-6","align-self-center");
+        top_row.appendChild(image_col)
+
+
+
+        const film_img = document.createElement("img");
+        film_img.setAttribute("height","250px");
+        film_img.setAttribute("width","175px");
+        film_img.setAttribute("src",film.get_image());
+        image_col.appendChild(film_img);
+
+        const film_src = document.createElement("p");
+        film_src.textContent = film.get_img_src();
+        image_col.appendChild(film_src);
+
+        const info_col = document.createElement("div");
+        info_col.classList.add("col-sm-6","align-self-center");
+        top_row.appendChild(info_col);
+
+        const film_title = document.createElement("p");
+        film_title.textContent = film.get_title();
+        info_col.appendChild(film_title);
+
+        const film_director = document.createElement("p");
+        film_director.textContent = film.get_director();
+        info_col.appendChild(film_director);
+
+
+        const star_img = document.createElement("img");
+        star_img.setAttribute("height","50px");
+        star_img.setAttribute("width","200px");
+        star_img.setAttribute("src",stars_dictionary[film.get_average_rating()]);
+        info_col.appendChild(star_img);
+
+
+        const bottom_row  = document.createElement("div");
+        bottom_row.classList.add("row");
+        film_container.appendChild(bottom_row);
+
+        const rating_col = document.createElement("div");
+        rating_col.classList.add("col-sm-8","align-self-center");
+        bottom_row.appendChild(rating_col);
+       
+        const latest_review = document.createElement("p");
+        latest_review.textContent = film.get_latest_review().get_review();
+        rating_col.appendChild(latest_review);
+
+
+        const button_col = document.createElement("div");
+        button_col.classList.add("col-sm-4","align-self-center");
+        bottom_row.appendChild(button_col);
+
+
+        const review_button = document.createElement("button");
+        review_button.classList.add("btn","btn-danger");
+        review_button.setAttribute("type","button");
+        review_button.addEventListener("click", () => {
+            write_review(film);
+        })
+        review_button.textContent = "Write review";
+        button_col.appendChild(review_button);
+
+
+    }
+}
+
+
+function write_review(film){
+    let modal1 = new bootstrap.Modal(document.getElementById("review_modal"));
+    modal1.toggle()
+}
+
+
+
+function update_stars(number){
+
+    console.log(number);
+    if (star_states[number] == 0){
+        
+        while (number > 0 ){
+            let num_str = String(number);
+            let star_str = "star" + num_str;
+            let star = document.getElementById(star_str);
+            star.style.color = "#F2C12E";
+            star_states[number] = 1;
+            number = number - 1;
+        }
+    }
+    else {
+        number = number + 1;
+        while (number < 6){
+            let num_str = String(number);
+            let star_str = "star" + num_str ;
+            let star = document.getElementById(star_str);
+            console.log(star_str)
+            star.style.color = "black";
+            star_states[number] = 0;
+            number = number + 1;
+
+        }
+    }
+
+    }
+
 let current_director = null;
 
-christopher_nolan = new Director("Christopher Nolan","images/Christopher_Nolan_Cannes_2018.jpg.webp","Sir Christopher Edward Nolan (born 30 July 1970) is a British and American filmmaker. Known for his Hollywood blockbusters, he is considered a leading filmmaker of the 21st century. Nolan's films have earned over $6 billion worldwide, making him the seventh-highest-grossing film director. His accolades include two Academy Awards, a Golden Globe Award and two British Academy Film Awards.",2);
+christopher_nolan = new Director("Christopher Nolan","images/Christopher_Nolan_Cannes_2018.jpg.webp","Sir Christopher Edward Nolan (born 30 July 1970) is a British and American filmmaker. Known for his Hollywood blockbusters, he is considered a leading filmmaker of the 21st century. Nolan's films have earned over $6 billion worldwide, making him the seventh-highest-grossing film director. His accolades include two Academy Awards, a Golden Globe Award and two British Academy Film Awards.",5);
 
-interstellar = new Film("Interstellar","#","Christopher Nolan");
+interstellar = new Film("Interstellar","images/interstellar.jpg","Christopher Nolan",4,"wiki");
 
-interstellar_review = new Review("Interstellar","dwqd",5);
+interstellar_review = new Review("Interstellar","Amazing film",5);
 
+
+interstellar.add_review(interstellar_review)
 
 const directors = [christopher_nolan];
 
+const stars_dictionary = {};
+stars_dictionary[0] = "images/0stars.png";
+stars_dictionary[1] = "images/1stars.png";
+stars_dictionary[2] = "images/2stars.png";
+stars_dictionary[3] = "images/3stars.png";
+stars_dictionary[4] = "images/4stars.png";
+stars_dictionary[5] = "images/5stars.png";
+
+all_films = [interstellar,interstellar,interstellar];
+
+
+const star_states = {};
+star_states[1] = 0;
+star_states[2] = 0;
+star_states[3] = 0;
+star_states[4] = 0;
+star_states[5] = 0;
+
+
+
+console.log(interstellar.get_reviews());
+console.log(interstellar.get_image());
 clear_director()
+
+show_films(all_films)
