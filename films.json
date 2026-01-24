@@ -1,1 +1,10 @@
-{"film":"Interstellar","review":"I liked this film","rating":3}
+[
+    {
+        "title" : "Interstellar",
+        "image" : "images/interstellar.jpg",
+        "director" : "Christopher Nolan",
+        "average_rating" : 4,
+        "img_src" : "Wikipedia"
+
+    }
+]

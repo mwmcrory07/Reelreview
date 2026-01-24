@@ -1,7 +1,5 @@
 
 
-
-
 class Director {
     constructor(name,image,description,average_rating){
         this.name = name
@@ -237,7 +235,9 @@ function show_films(films){
 
 function write_review(film){
     let modal1 = new bootstrap.Modal(document.getElementById("review_modal"));
-    modal1.toggle()
+    const film_title = document.getElementById("film_title");
+    film_title.textContent = film.get_title();
+    modal1.toggle();
 }
 
 
@@ -270,8 +270,106 @@ function update_stars(number){
         }
     }
 
-    }
+}
 
+
+
+
+
+const submit_review = document.getElementById("submit_review");
+
+submit_review.addEventListener("click", async function(event){
+    event.preventDefault();
+    const film_title = document.getElementById("film_title");
+    const user_rating = document.getElementById("user_rating");
+    let star_counter = 5;
+    let found = false;
+    let rating = 0;
+    while (star_counter > 0 && !found){
+        if (star_states[star_counter] == 1){
+            console.log(star_states[star_counter]);
+            rating = star_counter;
+            console.log(rating);
+            found = true;
+        }
+        star_counter = star_counter - 1
+    }
+    let review = new Review(film_title.textContent,user_rating.options[user_rating.selectedIndex].text,rating);
+    let json_review = JSON.stringify(review);
+    const response = await fetch("http://localhost:3000/review/new",{
+        method : 'POST',
+        headers : {
+            "Content-Type" : "application/json"
+        },
+        body : json_review
+    });
+    if(response.ok){
+        const responseBody = await response.text();
+        console.log("response: ",responseBody);
+
+    }
+    else {
+        alert("Problem: ",response.statusText);
+    }
+    
+})
+
+
+async function get_all_films(){
+
+    all_films.length = 0;
+    try {
+        const response = await fetch("http://localhost:3000/films/all");
+        if (response.ok){
+            const values = await response.json();
+
+            for (i=0;i<values.length;i++){
+                let data = values[i];
+
+                let new_film = new Film(
+                    data.title,
+                    data.image,
+                    data.director,
+                    data.average_rating,
+                    data.img_src
+                )
+                all_films.push(new_film);
+            }
+        }
+
+    
+    }
+    catch(error){
+        console.log(error.message);
+    }
+}
+async function get_all_reviews(){
+        all_films.length = 0;
+    try {
+        const response = await fetch("http://localhost:3000/reviews/all");
+        if (response.ok){
+            const values = await response.json();
+
+            for (i=0;i<values.length;i++){
+                let data = values[i];
+
+                let new_film = new Film(
+                    data.title,
+                    data.image,
+                    data.director,
+                    data.average_rating,
+                    data.img_src
+                )
+                all_films.push(new_film);
+            }
+        }
+
+    
+    }
+    catch(error){
+        console.log(error.message);
+    }
+}
 let current_director = null;
 
 christopher_nolan = new Director("Christopher Nolan","images/Christopher_Nolan_Cannes_2018.jpg.webp","Sir Christopher Edward Nolan (born 30 July 1970) is a British and American filmmaker. Known for his Hollywood blockbusters, he is considered a leading filmmaker of the 21st century. Nolan's films have earned over $6 billion worldwide, making him the seventh-highest-grossing film director. His accolades include two Academy Awards, a Golden Globe Award and two British Academy Film Awards.",5);
@@ -293,7 +391,7 @@ stars_dictionary[3] = "images/3stars.png";
 stars_dictionary[4] = "images/4stars.png";
 stars_dictionary[5] = "images/5stars.png";
 
-all_films = [interstellar,interstellar,interstellar];
+let all_films = [interstellar,interstellar,interstellar];
 
 
 const star_states = {};
@@ -308,5 +406,6 @@ star_states[5] = 0;
 console.log(interstellar.get_reviews());
 console.log(interstellar.get_image());
 clear_director()
-
-show_films(all_films)
+get_all_films()
+console.log(all_films)
+show_films(all_films);

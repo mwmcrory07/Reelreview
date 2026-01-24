@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>ReelReview</title>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="mystyles.css">
 
@@ -19,10 +19,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <p id = "film_title">x</p>
         <div class = "row">
             <div class = "col-sm text-center">
                 <p>Give a comment on the film</p>
-                <select class="form-select" aria-label="Default select example">
+                <select class="form-select" aria-label="Default select example" id = "user_rating">
                 <option value = "0">I loved this film</option>
                 <option value = "1" >This film was enjoyable</option>
                 <option value = "2" >This film was good but not really the type of film I enjoy</option>
@@ -44,7 +45,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-danger">Save changes</button>
+        <button type="button" class="btn btn-danger" id = "submit_review">Submit review</button>
       </div>
     </div>
     </div>
@@ -63,8 +64,9 @@
         <div class = "row"  >
             
             <div class = "col-sm-8 align-self-center" style = "font-size: xx-large;">
-                Films • Directors • Reviews
+                Films | Directors | Reviews
             </div>
+           
             <div class = "col-sm-4 align-self-center">
                 
                     <div class="dropdown" id = "director_dropdown">
