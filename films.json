@@ -1,10 +1,88 @@
 [
-    {
-        "title" : "Interstellar",
-        "image" : "images/interstellar.jpg",
-        "director" : "Christopher Nolan",
-        "average_rating" : 4,
-        "img_src" : "Wikipedia"
+  {
+    "title": "Interstellar",
+    "image": "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg",
+    "director": "Christopher Nolan",
+    "average_rating": 4,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
+  {
+    "title": "Inception",
+    "image": "https://upload.wikimedia.org/wikipedia/en/7/7f/Inception_ver3.jpg",
+    "director": "Christopher Nolan",
+    "average_rating": 5,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
+  {
+    "title": "The Dark Knight",
+    "image": "https://upload.wikimedia.org/wikipedia/en/8/8a/Dark_Knight.jpg",
+    "director": "Christopher Nolan",
+    "average_rating": 5,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
+  {
+    "title": "Dunkirk",
+    "image": "https://upload.wikimedia.org/wikipedia/en/1/15/Dunkirk_Film.jpg",
+    "director": "Christopher Nolan",
+    "average_rating": 4,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
 
-    }
+  {
+    "title": "Goodfellas",
+    "image": "https://upload.wikimedia.org/wikipedia/en/7/7b/Goodfellas.jpg",
+    "director": "Martin Scorsese",
+    "average_rating": 5,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
+  {
+    "title": "Taxi Driver",
+    "image": "https://upload.wikimedia.org/wikipedia/en/8/8c/Taxi_Driver.jpg",
+    "director": "Martin Scorsese",
+    "average_rating": 5,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
+  {
+    "title": "The Wolf of Wall Street",
+    "image": "https://upload.wikimedia.org/wikipedia/en/7/7a/Wolf_of_Wall_Street_%282013_film%29.jpg",
+    "director": "Martin Scorsese",
+    "average_rating": 4,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
+  {
+    "title": "Shutter Island",
+    "image": "https://upload.wikimedia.org/wikipedia/en/7/76/Shutter_Island_Poster.jpg",
+    "director": "Martin Scorsese",
+    "average_rating": 4,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
+
+  {
+    "title": "Jurassic Park",
+    "image": "https://upload.wikimedia.org/wikipedia/en/6/6e/Jurassic_Park_poster.jpg",
+    "director": "Steven Spielberg",
+    "average_rating": 5,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
+  {
+    "title": "E.T. the Extra-Terrestrial",
+    "image": "https://upload.wikimedia.org/wikipedia/en/6/66/E.T._the_Extra-Terrestrial_%281982_film%29.png",
+    "director": "Steven Spielberg",
+    "average_rating": 5,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
+  {
+    "title": "Schindler's List",
+    "image": "https://upload.wikimedia.org/wikipedia/en/3/38/Schindler%27s_List_movie.jpg",
+    "director": "Steven Spielberg",
+    "average_rating": 5,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  },
+  {
+    "title": "Saving Private Ryan",
+    "image": "https://upload.wikimedia.org/wikipedia/en/a/ac/Saving_Private_Ryan_poster.jpg",
+    "director": "Steven Spielberg",
+    "average_rating": 5,
+    "img_src": "Wikimedia Commons / Wikipedia"
+  }
 ]

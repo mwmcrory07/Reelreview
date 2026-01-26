@@ -210,7 +210,7 @@ function show_films(films){
         bottom_row.appendChild(rating_col);
        
         const latest_review = document.createElement("p");
-        latest_review.textContent = film.get_latest_review().get_review();
+        //latest_review.textContent = film.get_latest_review().get_review();
         rating_col.appendChild(latest_review);
 
 
@@ -234,13 +234,42 @@ function show_films(films){
 
 
 function write_review(film){
-    let modal1 = new bootstrap.Modal(document.getElementById("review_modal"));
+    let modal_review = new bootstrap.Modal(document.getElementById("review_modal"));
     const film_title = document.getElementById("film_title");
     film_title.textContent = film.get_title();
-    modal1.toggle();
+    modal_review.toggle();
+}
+
+function add_film(){
+    let modal_film = new bootstrap.Modal(document.getElementById("film_modal"));
+    modal_film.toggle();
 }
 
 
+const film_form = document.getElementById("film_form");
+film_form.addEventListener("submit", async function(event){
+    event.preventDefault();
+    const film_data = new FormData(film_form);
+    let js_data = Object.fromEntries((film_data.entries()));
+    js_data.average_rating = 0;
+    const response = await fetch("http://localhost:3000/films/new",
+        {
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(js_data)
+        }
+    )
+    if (response.ok){
+        const responseBody = await response.text();
+        console.log("Response from server :", responseBody);
+    }
+    else {
+        console.log(response.statusText)
+    }
+
+})
 
 function update_stars(number){
 
@@ -315,6 +344,9 @@ submit_review.addEventListener("click", async function(event){
 })
 
 
+
+// Recieves data from the server for all the films and creates Film objects
+// Then the Film objects are placed into the all_films array
 async function get_all_films(){
 
     all_films.length = 0;
@@ -334,17 +366,23 @@ async function get_all_films(){
                     data.img_src
                 )
                 all_films.push(new_film);
+
             }
+            show_films(all_films);
         }
 
-    
+
     }
     catch(error){
         console.log(error.message);
     }
 }
+
+
+// Recieves data from the server for all the reviews and creates Rating objects
+// Then the Rating objects are placed into the all_reviews array
 async function get_all_reviews(){
-        all_films.length = 0;
+        all_reviews.length = 0;
     try {
         const response = await fetch("http://localhost:3000/reviews/all");
         if (response.ok){
@@ -353,15 +391,15 @@ async function get_all_reviews(){
             for (i=0;i<values.length;i++){
                 let data = values[i];
 
-                let new_film = new Film(
-                    data.title,
-                    data.image,
-                    data.director,
-                    data.average_rating,
-                    data.img_src
+                let new_review = new Review(
+                    data.film,
+                    data.review,
+                    data.rating
                 )
-                all_films.push(new_film);
+                all_reviews.push(new_review);
+                
             }
+            console.log(all_reviews)
         }
 
     
@@ -391,7 +429,8 @@ stars_dictionary[3] = "images/3stars.png";
 stars_dictionary[4] = "images/4stars.png";
 stars_dictionary[5] = "images/5stars.png";
 
-let all_films = [interstellar,interstellar,interstellar];
+let all_films = [];
+let all_reviews = [];
 
 
 const star_states = {};
@@ -407,5 +446,6 @@ console.log(interstellar.get_reviews());
 console.log(interstellar.get_image());
 clear_director()
 get_all_films()
+get_all_reviews()
 console.log(all_films)
 show_films(all_films);

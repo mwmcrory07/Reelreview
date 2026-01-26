@@ -50,9 +50,79 @@
     </div>
     </div>
     </div>
-    <nav class = "navbar bg-body-tertiary">
-        <div class="container-fluid"></div>
+    <div class="modal fade" tabindex="-1" id = "film_modal">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add a new film</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action = "film/new" method = "post" id = "film_form">
+            <div class = "row">
+            <div class = "col-sm-6">
+            <div class = "mb-3">
+                <label for = "new_title" class = "form_label">Enter the title</label>
+                <br>
+                <input type = "text" class = "form_control" id = "new_title" name="title">
+            </div>
+                <div class = "mb-3">
+                <label for = "new_image" class = "form_label">Enter the image link</label>
+                <br>
+                <input type = "text" class = "form_control" id = "new_image" name = "image">
+                </div>
+ 
+            </div>
+            <div class = "col-sm-6">
+
+           <div class = "mb-3">
+                <label for = "new_director" class = "form_label">Enter the director</label>
+                <br>
+                <input type = "text" class = "form_control" id = "new_director" name="director">
+            </div>
+                <div class = "mb-3">
+                <label for = "new_image_src" class = "form_label">Enter the image reference</label>
+                <br>
+                <input type = "text" class = "form_control" id = "new_image_src" name="img_src">
+                </div>
+            </div>
+            <hr>
+            </div>
+            <div class = "row">
+
+
+            <div class = "col-sm-7">
+            
+            <label for = "new_image_src" class = "form_label">Enter the admin key</label>
+            <br>
+            <input type = "text" class = "form_control" id = "admin_key" aria-describedby="admin_description" name="admin_key">
+            <div id="admin_description" class = "form-text">Only admins can create new films</div>
+            </div>
+            <div class = "col-sm-5 align-self-center">
+            <button type="submit" class="btn btn-danger" id = "submit_film">Submit film</button>
+            </div>
+            </div>
+        </form>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        
+        </div>
+
+      </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <nav class = "navbar bg-body-tertiary navbar-inverse">
+        
+
+        
+        <div class="container-fluid">
+        <div class = "navbar-header">
         <h1 class="navbar-brand mb-0 h1" style = "font-size: xx-large;padding-left: 5%;">ReelReview</h1>
+        </div>
+        <button class = "btn btn-danger navbar-btn" onclick="add_film()">Add a film</button>
+        </div>
      </div>
     </nav>
 
@@ -68,9 +138,10 @@
             </div>
            
             <div class = "col-sm-4 align-self-center">
+
                 
                     <div class="dropdown" id = "director_dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"role="button">
+                    <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"role="button">
                     Filter by director
                     </button>
                     <ul class = "dropdown-menu">
@@ -80,7 +151,9 @@
                     <li><button class = "dropdown-item" href="">Steven Spielberg</button></li>
                     <li><button class = "dropdown-item" href="">Martin Scorsese</button></li>
                     </ul>
-            </div>
+                </div>
+                    
+
     
 
             </div>
@@ -94,7 +167,7 @@
             <div class = "col-sm-4 align-self-center" style = "font-size:medium;">
                 
                 
-                <img src="images/Christopher_Nolan_Cannes_2018.jpg.webp" alt = "director_img" height="250px"width="200px" id= "director_image">
+                <img src="https://upload.wikimedia.org/wikipedia/en/7/76/Shutter_Island_Poster.jp" alt = "director_img" height="250px"width="200px" id= "director_image">
 
                 <p>Image sourced from : </p>
 

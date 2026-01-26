@@ -29,14 +29,35 @@ function add_review(review){
 
 })
 }
-// Post method used for adding a new review to the server
+// POST method used for adding a new review to the server
 app.post("/review/new", function(req,res){
    add_review(req.body);
    res.send("Successfully added review");
 })
 
-// Get method for returning all the film data from the server
 
+// POST method for adding a new film to the server
+app.post("/films/new", function(req,res){
+   let data = req.body;
+   if (data.admin_key == ADMIN_KEY){
+      let save_data = Object();
+      save_data.title = data.title;
+      save_data.image = data.image;
+      save_data.director = data.director;
+      save_data.average_rating = data.average_rating;
+      save_data.img_src = data.img_src;
+      fs.readFile("./films.json", function(err,data){
+         let original_data = JSON.parse(data);
+         original_data.push(save_data);
+         fs.writeFileSync("./films.json",JSON.stringify(original_data));
+      })
+   }
+   else{
+      res.send("Incorrect admin key");
+   }
+})
+
+// GET method for returning all the film data from the server
 app.get("/films/all", function (req,res){
 
    fs.readFile("./films.json", function(err,data){
@@ -46,6 +67,41 @@ app.get("/films/all", function (req,res){
    
 })
 
+
+// GET method for returning all of the review data from the server
+app.get("/reviews/all", function(req,res){
+   
+   fs.readFile("./reviews.json", function(err,data){
+      res.send(data);
+   });
+   
+})
+
+// GET method for returning director information from the server for a specific director
+app.get("/director/:id", function(req,res){
+   
+   fs.readFile("./directors.json", function(err,data){
+
+      const js_data = JSON.parse(data);
+      let found_director = false;
+      for (i=0;i<js_data.length;i++){
+         if(js_data[i].director == req.params.id){
+            res.send(JSON.stringify(js_data[i]))
+            found_director = true
+         }
+      }
+      if (!found_director){
+         res.send("That director doesn't exist on the server")
+      }
+
+   });
+
+})
+
+
+
+
+const ADMIN_KEY = "m?B)j|fJKq06z]n)"
 
 
 app.listen(PORT)
