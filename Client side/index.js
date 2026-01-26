@@ -1,25 +1,49 @@
 
 
 class Director {
-    constructor(name,image,description,average_rating){
-        this.name = name
-        this.image = image
-        this.description = description
-        this.films = []
-        this.average_rating = average_rating
+    constructor(name,image,description,average_rating,image_src){
+        this.name = name;
+        this.image = image;
+        this.description = description;
+        this.films = [];
+        this.average_rating = average_rating;
+        this.image_src = image_src;
     }
     get_name(){
-        return this.name
+        return this.name;
     }
     get_image(){
-        return this.image
+        return this.image;
     }
     get_description(){
-        return this.description
+        return this.description;
     }
     get_average_rating(){
-        return this.average_rating
+        return this.average_rating;
     }
+
+    get_image_src(){
+        return this.image_src;
+    }
+    add_film(film){
+        this.films.push(film);
+    }
+    get_films(){
+        return this.films;
+    }
+        
+    calc_average_rating(){
+        if (!this.films || this.films.length === 0){
+            this.average_rating = 0;
+        return;
+    }
+        let sum = 0
+        for(let i=0;i<(this.films.length);i++){
+            sum += this.films[i].average_rating;
+        }
+        this.average_rating = Math.round(sum / this.films.length);
+    }
+
     }
 
 
@@ -38,11 +62,15 @@ class Film {
     }
 
     calc_average_rating(){
+        if (!this.reviews || this.reviews.length === 0){
+        this.average_rating = 0;
+        return;
+    }
         let sum = 0
-        for(i=0;i<(this.reviews.length);i++){
-            sum += this.reviews[i]
+        for(let i=0;i<(this.reviews.length);i++){
+            sum += this.reviews[i].rating;
         }
-        this.average_rating = sum / this.ratings.length
+        this.average_rating = Math.round(sum / this.reviews.length);
     }
 
     get_title(){
@@ -66,10 +94,7 @@ class Film {
     get_img_src(){
         return this.img_src
     }
-    add_review(review){
-        this.reviews.push(review);
 
-    }
 }
 
 
@@ -83,6 +108,9 @@ class Review{
     get_review(){
         return this.review;
     }
+    get_film(){
+        return this.film;
+    }
 
 }
 
@@ -92,18 +120,19 @@ function clear_director(){
     const director_div = document.getElementById("director_info");
     const director_bar = document.getElementById("director_bar");
     director_div.style.display = "none";
-    
     director_bar.style.display = "none";
+    
 
 }
 
 
 
 function update_director(name){
+
     const director_div = document.getElementById("director_info");
     const director_bar = document.getElementById("director_bar");
 
-
+    
 
     let found = false;
     let pointer = 0;
@@ -115,6 +144,8 @@ function update_director(name){
     }
 
     let director = directors[pointer];
+    add_all_films(director);
+    director.calc_average_rating();
 
     const director_description = document.getElementById("director_description");
     director_description.innerHTML = director.get_description();
@@ -126,10 +157,15 @@ function update_director(name){
     const average_rating_image = document.getElementById("average_rating_image");
     average_rating_image.src = stars_dictionary[director.get_average_rating()];
 
+    const director_image_src = document.getElementById("director_image_src");
+    director_image_src.innerHTML = director.get_image_src();
+
+
     director_div.style.display = "block";
     
     director_bar.style.display = "block";
     
+    show_films(director.get_films());
   
 }
 
@@ -138,8 +174,9 @@ function show_films(films){
     let counter = 2;
     let i = 0;
     const films_grid =  document.getElementById("films_grid");
+    films_grid.replaceChildren();
     let current_row = null
-    for (i = 0; i<films.length;i++){
+    for (let i = 0; i<films.length;i++){
         let film = films[i]
         if (counter == 2) {
             counter = 1;
@@ -210,7 +247,12 @@ function show_films(films){
         bottom_row.appendChild(rating_col);
        
         const latest_review = document.createElement("p");
-        //latest_review.textContent = film.get_latest_review().get_review();
+        try{
+        latest_review.textContent = ("Latest review : " + (film.get_latest_review().get_review()));
+        }
+        catch{
+            latest_review.textContent = "There has been no reviews yet for this film";
+        }
         rating_col.appendChild(latest_review);
 
 
@@ -307,6 +349,8 @@ function update_stars(number){
 
 const submit_review = document.getElementById("submit_review");
 
+
+// Function for submitting a review to the server
 submit_review.addEventListener("click", async function(event){
     event.preventDefault();
     const film_title = document.getElementById("film_title");
@@ -334,6 +378,14 @@ submit_review.addEventListener("click", async function(event){
     });
     if(response.ok){
         const responseBody = await response.text();
+        for (let i=0;i<all_films.length;i++){
+            if (film_title.textContent == all_films[i].get_title()){
+                all_films[i].add_review(review);
+                all_films[i].calc_average_rating();
+                await update_average_rating(all_films[i]);
+                reload_films();
+            }
+        }
         console.log("response: ",responseBody);
 
     }
@@ -350,14 +402,12 @@ submit_review.addEventListener("click", async function(event){
 async function get_all_films(){
 
     all_films.length = 0;
-    try {
+    
         const response = await fetch("http://localhost:3000/films/all");
         if (response.ok){
             const values = await response.json();
-
-            for (i=0;i<values.length;i++){
+            for (let i=0;i<values.length;i++){
                 let data = values[i];
-
                 let new_film = new Film(
                     data.title,
                     data.image,
@@ -367,16 +417,15 @@ async function get_all_films(){
                 )
                 all_films.push(new_film);
 
+
+
             }
-            show_films(all_films);
+
         }
 
 
     }
-    catch(error){
-        console.log(error.message);
-    }
-}
+
 
 
 // Recieves data from the server for all the reviews and creates Rating objects
@@ -388,7 +437,7 @@ async function get_all_reviews(){
         if (response.ok){
             const values = await response.json();
 
-            for (i=0;i<values.length;i++){
+            for (let i=0;i<values.length;i++){
                 let data = values[i];
 
                 let new_review = new Review(
@@ -399,7 +448,7 @@ async function get_all_reviews(){
                 all_reviews.push(new_review);
                 
             }
-            console.log(all_reviews)
+
         }
 
     
@@ -408,9 +457,36 @@ async function get_all_reviews(){
         console.log(error.message);
     }
 }
+
+
+
+async function update_average_rating(film){
+    let rating_object = Object();
+    film.calc_average_rating();
+    rating_object.average_rating = film.get_average_rating();
+    rating_object.title = film.get_title();
+        const response = await fetch("http://localhost:3000/films/update",{
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(rating_object)
+        });
+    if(response.ok){
+        const responseBody = await response.text();
+        console.log("Response from server is: ",responseBody);
+
+    }
+    else {
+        alert("Problem: ",response.statusText);
+    }
+
+}
 let current_director = null;
 
-christopher_nolan = new Director("Christopher Nolan","images/Christopher_Nolan_Cannes_2018.jpg.webp","Sir Christopher Edward Nolan (born 30 July 1970) is a British and American filmmaker. Known for his Hollywood blockbusters, he is considered a leading filmmaker of the 21st century. Nolan's films have earned over $6 billion worldwide, making him the seventh-highest-grossing film director. His accolades include two Academy Awards, a Golden Globe Award and two British Academy Film Awards.",5);
+christopher_nolan = new Director("Christopher Nolan","images/Christopher_Nolan_Cannes_2018.jpg.webp","Over his career Christopher Nolan has won : 2 academy awards for best director, 1 golden globe for best director, 2 British academy film awards and grossed over 6 billion dollars worldwide",5,"Image sourced from : wikipedia");
+
+
 
 interstellar = new Film("Interstellar","images/interstellar.jpg","Christopher Nolan",4,"wiki");
 
@@ -429,8 +505,8 @@ stars_dictionary[3] = "images/3stars.png";
 stars_dictionary[4] = "images/4stars.png";
 stars_dictionary[5] = "images/5stars.png";
 
-let all_films = [];
-let all_reviews = [];
+const all_films = [];
+const all_reviews = [];
 
 
 const star_states = {};
@@ -442,10 +518,50 @@ star_states[5] = 0;
 
 
 
-console.log(interstellar.get_reviews());
-console.log(interstellar.get_image());
-clear_director()
-get_all_films()
-get_all_reviews()
-console.log(all_films)
-show_films(all_films);
+// For a given film object finds all of the review objects for that film and then adds them to the film object
+function add_all_reviews(film){
+    film.reviews = [];
+    for (let i=0;i<all_reviews.length;i++){
+        if (all_reviews[i].get_film() == film.get_title()){
+            film.add_review(all_reviews[i]);
+        }
+        
+    }
+
+}
+
+// For a given director object find all of the film objects for that director and then add them to the director object
+function add_all_films(director){
+    director.films = [];
+    for (let i=0;i<all_films.length;i++){
+        if (all_films[i].get_director() == director.get_name())
+            director.add_film(all_films[i]);
+
+    }   
+}
+
+function clear_info(){
+    clear_director()
+    show_films(all_films);
+}
+
+
+clear_director();
+
+async function init(){
+    await get_all_reviews();
+    await get_all_films();
+
+    for (const film of all_films){
+        add_all_reviews(film);
+
+    }
+
+    show_films(all_films);
+}
+
+function reload_films(){
+    show_films(all_films);
+}
+
+init();

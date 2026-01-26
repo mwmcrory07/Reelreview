@@ -8,6 +8,9 @@ const path = require("path");
 
 const PORT = 3000;
 
+
+const ADMIN_KEY = "m?B)j|fJKq06z]n)";
+
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname,"Client side")));
@@ -39,6 +42,7 @@ app.post("/review/new", function(req,res){
 // POST method for adding a new film to the server
 app.post("/films/new", function(req,res){
    let data = req.body;
+   // Check to see if the request was sent by someone with access to admin code before storing data
    if (data.admin_key == ADMIN_KEY){
       let save_data = Object();
       save_data.title = data.title;
@@ -56,6 +60,30 @@ app.post("/films/new", function(req,res){
       res.send("Incorrect admin key");
    }
 })
+
+// POST method for updating the value of the average rating on the server
+app.post("/films/update" , function(req,res){
+   let data = req.body;
+
+   if (data.average_rating > 0 && data.average_rating < 5){
+         fs.readFile("./films.json", function(err,data){
+         let original_data = JSON.parse(data);
+         for (let i=0;i<original_data.length;i++){
+            if(data.title == original_data[i].title){
+               original_data.average_rating = data.average_rating;
+            }
+         }
+         fs.writeFileSync("./films.json",JSON.stringify(original_data));
+      
+      res.send("The average rating has been updated");
+   })
+   }
+      
+   else{
+      res.send("Values given are not within correct range");
+   }
+}
+)
 
 // GET method for returning all the film data from the server
 app.get("/films/all", function (req,res){
@@ -78,14 +106,16 @@ app.get("/reviews/all", function(req,res){
 })
 
 // GET method for returning director information from the server for a specific director
-app.get("/director/:id", function(req,res){
+/*
+app.get("/director/search/:id", function(req,res){
    
    fs.readFile("./directors.json", function(err,data){
 
       const js_data = JSON.parse(data);
       let found_director = false;
       for (i=0;i<js_data.length;i++){
-         if(js_data[i].director == req.params.id){
+         let formatted_director = js_data[i].director.replace(/ /g,"_")
+         if(formatted_director == req.params.id){
             res.send(JSON.stringify(js_data[i]))
             found_director = true
          }
@@ -97,11 +127,12 @@ app.get("/director/:id", function(req,res){
    });
 
 })
+*/
 
 
 
 
-const ADMIN_KEY = "m?B)j|fJKq06z]n)"
+
 
 
 app.listen(PORT)

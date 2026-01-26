@@ -93,9 +93,9 @@
 
             <div class = "col-sm-7">
             
-            <label for = "new_image_src" class = "form_label">Enter the admin key</label>
+            <label for = "admin_key" class = "form_label" >Enter the admin key</label>
             <br>
-            <input type = "text" class = "form_control" id = "admin_key" aria-describedby="admin_description" name="admin_key">
+            <input class = "form_control" id = "admin_key" aria-describedby="admin_description" name="admin_key"type="password">
             <div id="admin_description" class = "form-text">Only admins can create new films</div>
             </div>
             <div class = "col-sm-5 align-self-center">
@@ -145,7 +145,7 @@
                     Filter by director
                     </button>
                     <ul class = "dropdown-menu">
-                    <li><button class = "dropdown-item" onclick="clear_director()">All</button></li>
+                    <li><button class = "dropdown-item" onclick="clear_info()">All</button></li>
                     <li><hr class = "dropdown-divider"></li>
                     <li><button class = "dropdown-item" onclick="update_director('Christopher Nolan')">Christopher Nolan</button></li>
                     <li><button class = "dropdown-item" href="">Steven Spielberg</button></li>
@@ -167,9 +167,9 @@
             <div class = "col-sm-4 align-self-center" style = "font-size:medium;">
                 
                 
-                <img src="https://upload.wikimedia.org/wikipedia/en/7/76/Shutter_Island_Poster.jp" alt = "director_img" height="250px"width="200px" id= "director_image">
+                <img src="" alt = "director_img" height="250px"width="200px" id= "director_image">
 
-                <p>Image sourced from : </p>
+                <p id="director_image_src">Image sourced from : </p>
 
             </div>
             <div class = "col-sm-8 align-self-center">
