@@ -16,7 +16,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Review this film</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clear_modal_review()"></button>
       </div>
       <div class="modal-body">
         <p id = "film_title">x</p>
@@ -44,7 +44,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clear_modal_review()">Close</button>
         <button type="button" class="btn btn-danger" id = "submit_review">Submit review</button>
       </div>
     </div>
@@ -55,7 +55,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Add a new film</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="clear_modal_film()"></button>
       </div>
       <div class="modal-body">
         <form action = "film/new" method = "post" id = "film_form">
@@ -104,7 +104,7 @@
             </div>
         </form>
         <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clear_modal_film()">Close</button>
         
         </div>
 

@@ -127,6 +127,7 @@ function clear_director(){
 
 
 
+// Function which for a given director displays their information and then the corresponding films
 function update_director(name){
 
     const director_div = document.getElementById("director_info");
@@ -146,7 +147,6 @@ function update_director(name){
     let director = directors[pointer];
     add_all_films(director);
     director.calc_average_rating();
-    console.log(director.average_rating);
 
     const director_description = document.getElementById("director_description");
     director_description.innerHTML = director.get_description();
@@ -171,7 +171,7 @@ function update_director(name){
   
 }
 
-
+// Function which takes in a list of film objects and displays them on the screen within the film grid
 function show_films(films){
     let counter = 2;
     let i = 0;
@@ -220,7 +220,6 @@ function show_films(films){
         const film_src = document.createElement("p");
         film_src.textContent = ("Image sourced from : " +film.get_img_src());
         image_col.appendChild(film_src);
-
         const info_col = document.createElement("div");
         info_col.classList.add("col-sm-6","align-self-center");
         top_row.appendChild(info_col);
@@ -278,19 +277,34 @@ function show_films(films){
 }
 
 const modal_review = new bootstrap.Modal(document.getElementById("review_modal"));
+// Function to handle the displaying of the popup modal for the review
 function write_review(film){
     const film_title = document.getElementById("film_title");
     film_title.textContent = film.get_title();
     modal_review.toggle();
 }
 
+// Function to handle the displaying of the popuo modal for the film
 const modal_film = new bootstrap.Modal(document.getElementById("film_modal"));
 function add_film(){
     modal_film.toggle();
 }
 
 
+function clear_modal_film(){
+    document.getElementById("new_title").value = "";
+    document.getElementById("new_image").value = "";
+    document.getElementById("new_director").value = "";
+    document.getElementById("new_image_src").value = "";
+    document.getElementById("admin_key").value = "";
+}
+
+function clear_modal_review(){
+    update_stars(1);
+}
 const film_form = document.getElementById("film_form");
+
+// Function for sending a post request to the server when the new film made
 film_form.addEventListener("submit", async function(event){
     event.preventDefault();
     const film_data = new FormData(film_form);
@@ -311,6 +325,7 @@ film_form.addEventListener("submit", async function(event){
         new_film = new Film(js_data.title,js_data.image,js_data.director,0,js_data.img_src);
         all_films.push(new_film);
         modal_film.hide();
+        clear_modal_film();
         if (current_director == null){
             reload_films();
             
@@ -325,9 +340,10 @@ film_form.addEventListener("submit", async function(event){
 
 })
 
+
+// Function for updating the stars GUI element when clicked
 function update_stars(number){
 
-    console.log(number);
     if (star_states[number] == 0){
         
         while (number > 0 ){
@@ -390,6 +406,7 @@ submit_review.addEventListener("click", async function(event){
     });
     if(response.ok){
         const responseBody = await response.text();
+        clear_modal_review();
         for (let i=0;i<all_films.length;i++){
             if (film_title.textContent == all_films[i].get_title()){
                 all_films[i].add_review(review);
@@ -398,10 +415,20 @@ submit_review.addEventListener("click", async function(event){
                 reload_films();
             }
         }
+
         console.log("response: ",responseBody);
+        modal_review.hide();
+        if (current_director == null){
+            reload_films();
+            
+        }
+        else{
+            update_director(current_director.get_name());
+        }
 
     }
     else {
+        clear_modal_review()
         alert("Problem: ",response.statusText);
     }
     
@@ -514,12 +541,14 @@ const all_reviews = [];
 
 
 const star_states = {};
-star_states[1] = 0;
+star_states[1] = 1;
 star_states[2] = 0;
 star_states[3] = 0;
 star_states[4] = 0;
 star_states[5] = 0;
 
+let star1 = document.getElementById("star1");
+star1.style.color = "#F2C12E";
 
 
 // For a given film object finds all of the review objects for that film and then adds them to the film object
