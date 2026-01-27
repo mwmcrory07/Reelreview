@@ -58,7 +58,7 @@ class Film {
     }
 
     add_review(review){
-        this.reviews.push(review)
+        this.reviews.push(review);
     }
 
     calc_average_rating(){
@@ -146,6 +146,7 @@ function update_director(name){
     let director = directors[pointer];
     add_all_films(director);
     director.calc_average_rating();
+    console.log(director.average_rating);
 
     const director_description = document.getElementById("director_description");
     director_description.innerHTML = director.get_description();
@@ -166,6 +167,7 @@ function update_director(name){
     director_bar.style.display = "block";
     
     show_films(director.get_films());
+    current_director = director;
   
 }
 
@@ -212,10 +214,11 @@ function show_films(films){
         film_img.setAttribute("height","250px");
         film_img.setAttribute("width","175px");
         film_img.setAttribute("src",film.get_image());
+        film_img.setAttribute("alt","Film image");
         image_col.appendChild(film_img);
 
         const film_src = document.createElement("p");
-        film_src.textContent = film.get_img_src();
+        film_src.textContent = ("Image sourced from : " +film.get_img_src());
         image_col.appendChild(film_src);
 
         const info_col = document.createElement("div");
@@ -274,16 +277,15 @@ function show_films(films){
     }
 }
 
-
+const modal_review = new bootstrap.Modal(document.getElementById("review_modal"));
 function write_review(film){
-    let modal_review = new bootstrap.Modal(document.getElementById("review_modal"));
     const film_title = document.getElementById("film_title");
     film_title.textContent = film.get_title();
     modal_review.toggle();
 }
 
+const modal_film = new bootstrap.Modal(document.getElementById("film_modal"));
 function add_film(){
-    let modal_film = new bootstrap.Modal(document.getElementById("film_modal"));
     modal_film.toggle();
 }
 
@@ -306,6 +308,16 @@ film_form.addEventListener("submit", async function(event){
     if (response.ok){
         const responseBody = await response.text();
         console.log("Response from server :", responseBody);
+        new_film = new Film(js_data.title,js_data.image,js_data.director,0,js_data.img_src);
+        all_films.push(new_film);
+        modal_film.hide();
+        if (current_director == null){
+            reload_films();
+            
+        }
+        else{
+            update_director(current_director.get_name());
+        }
     }
     else {
         console.log(response.statusText)
@@ -486,14 +498,6 @@ let current_director = null;
 
 christopher_nolan = new Director("Christopher Nolan","images/Christopher_Nolan_Cannes_2018.jpg.webp","Over his career Christopher Nolan has won : 2 academy awards for best director, 1 golden globe for best director, 2 British academy film awards and grossed over 6 billion dollars worldwide",5,"Image sourced from : wikipedia");
 
-
-
-interstellar = new Film("Interstellar","images/interstellar.jpg","Christopher Nolan",4,"wiki");
-
-interstellar_review = new Review("Interstellar","Amazing film",5);
-
-
-interstellar.add_review(interstellar_review)
 
 const directors = [christopher_nolan];
 

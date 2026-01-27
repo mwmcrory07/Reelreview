@@ -55,6 +55,7 @@ app.post("/films/new", function(req,res){
          original_data.push(save_data);
          fs.writeFileSync("./films.json",JSON.stringify(original_data));
       })
+      res.send("Film has been added")
    }
    else{
       res.send("Incorrect admin key");
