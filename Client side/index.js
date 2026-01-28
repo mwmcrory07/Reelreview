@@ -88,9 +88,24 @@ class Film {
     get_reviews(){
         return this.reviews;
     }
-    get_latest_review(){
-        return this.reviews[this.reviews.length-1]
+    async get_latest_review(){
+        try{
+        let url = "http://localhost:3000/reviews/last/" + this.get_title().replace(/ /g,"_")
+        const response = await fetch(url);
+        if (response.ok){
+            const values = await response.json();
+            return values.review;
+        }
+        }
+        catch{
+            return ("Server Disconnected");
+        }
+
+
     }
+
+
+
     get_img_src(){
         return this.img_src
     }
@@ -138,12 +153,17 @@ function update_director(name){
     let found = false;
     let pointer = 0;
     while (found == false){
+    
         if (directors[pointer].get_name() == name){
+            console.log(directors[pointer]);
             found = true;
+  
+        }
+        else{
+        pointer = pointer + 1;
         }
 
     }
-
     let director = directors[pointer];
     add_all_films(director);
     director.calc_average_rating();
@@ -172,7 +192,13 @@ function update_director(name){
 }
 
 // Function which takes in a list of film objects and displays them on the screen within the film grid
+// Show films first performs the check to see if the server is running
 function show_films(films){
+
+    
+
+// Continue show films only runs if the server is running
+
     let counter = 2;
     let i = 0;
     const films_grid =  document.getElementById("films_grid");
@@ -183,14 +209,14 @@ function show_films(films){
         if (counter == 2) {
             counter = 1;
             const row = document.createElement("div");
-            row.classList.add("row","gx-3");
+            row.classList.add("row");
             
             current_row = row;
             films_grid.appendChild(row);
         }
 
         const film_col = document.createElement("div");
-        film_col.classList.add("col-lg-6","align-self-center");
+        film_col.classList.add("col-lg-6","align-self-center","mb-3");
         current_row.appendChild(film_col);
 
         const film_container  = document.createElement("div");
@@ -249,14 +275,11 @@ function show_films(films){
         bottom_row.appendChild(rating_col);
        
         const latest_review = document.createElement("p");
-        try{
-        latest_review.textContent = ("Latest review : " + (film.get_latest_review().get_review()));
-        }
-        catch{
-            latest_review.textContent = "There has been no reviews yet for this film";
-        }
+        // Wait for the get request to the server to occur before trying to display
+        film.get_latest_review().then(review => {
+        latest_review.textContent = ("Latest review : " + review)})
+        
         rating_col.appendChild(latest_review);
-
 
         const button_col = document.createElement("div");
         button_col.classList.add("col-sm-4","align-self-center");
@@ -272,9 +295,10 @@ function show_films(films){
         review_button.textContent = "Write review";
         button_col.appendChild(review_button);
 
-
+    
     }
 }
+
 
 const modal_review = new bootstrap.Modal(document.getElementById("review_modal"));
 // Function to handle the displaying of the popup modal for the review
@@ -416,7 +440,6 @@ submit_review.addEventListener("click", async function(event){
             }
         }
 
-        console.log("response: ",responseBody);
         modal_review.hide();
         if (current_director == null){
             reload_films();
@@ -455,9 +478,6 @@ async function get_all_films(){
                     data.img_src
                 )
                 all_films.push(new_film);
-
-
-
             }
 
         }
@@ -504,6 +524,7 @@ async function update_average_rating(film){
     film.calc_average_rating();
     rating_object.average_rating = film.get_average_rating();
     rating_object.title = film.get_title();
+    try{
         const response = await fetch("http://localhost:3000/films/update",{
             method : "POST",
             headers : {
@@ -519,14 +540,19 @@ async function update_average_rating(film){
     else {
         alert("Problem: ",response.statusText);
     }
+    }
+    catch{
+
+    }
 
 }
 let current_director = null;
 
-christopher_nolan = new Director("Christopher Nolan","images/Christopher_Nolan_Cannes_2018.jpg.webp","Over his career Christopher Nolan has won : 2 academy awards for best director, 1 golden globe for best director, 2 British academy film awards and grossed over 6 billion dollars worldwide",5,"Image sourced from : wikipedia");
+christopher_nolan = new Director("Christopher Nolan","https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Christopher_Nolan_Cannes_2018.jpg/640px-Christopher_Nolan_Cannes_2018.jpg","Over his career Christopher Nolan has won : 2 academy awards for best director, 1 golden globe for best director, 2 British academy film awards and grossed over 6 billion dollars worldwide",5,"Image sourced from : Wikimedia Commons - taken by : Georges Biard");
+steven_spielberg = new Director("Steven Spielberg","https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Steven_Spielberg_Masterclass_Cin%C3%A9math%C3%A8que_Fran%C3%A7aise_2_cropped.jpg/640px-Steven_Spielberg_Masterclass_Cin%C3%A9math%C3%A8que_Fran%C3%A7aise_2_cropped.jpg","Over his career he has had 9 nominations for academy awards, winning 3, won 4 Golden Globes and 12 Emmy awards",5,"Image sourced from : Wikimedia Commons - taken by : Romain Dubois")
+martin_scorsese = new Director("Martin Scorsese","https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Martin_Scorsese-68749.jpg/640px-Martin_Scorsese-68749.jpg","Over his career he has had 10 nominations for best director and won once, he has won 3 golden globe wins and 3 emmy wins",5,"Image sourced from : Wikimedia Commons - taken by : Harald Krichel");
 
-
-const directors = [christopher_nolan];
+const directors = [christopher_nolan,steven_spielberg,martin_scorsese];
 
 const stars_dictionary = {};
 stars_dictionary[0] = "images/0stars.png";
@@ -581,18 +607,17 @@ function clear_info(){
 
 clear_director();
 
+// Function ran when the page is loaded to retrieve data from the server
 async function init(){
     await get_all_reviews();
     await get_all_films();
-
     for (const film of all_films){
         add_all_reviews(film);
-
     }
-
     show_films(all_films);
 }
 
+// Function used to redisplay the films on the page
 function reload_films(){
     show_films(all_films);
 }

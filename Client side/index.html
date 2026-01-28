@@ -41,9 +41,14 @@
                 <span onclick="update_stars(5)" class="star" id = "star5">★</span>
 
             </div>
+
+        </div>
+        <div class="alert alert-primary" role="alert">
+        A simple primary alert—check it out!
         </div>
       </div>
       <div class="modal-footer">
+
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clear_modal_review()">Close</button>
         <button type="button" class="btn btn-danger" id = "submit_review">Submit review</button>
       </div>
@@ -148,8 +153,8 @@
                     <li><button class = "dropdown-item" onclick="clear_info()">All</button></li>
                     <li><hr class = "dropdown-divider"></li>
                     <li><button class = "dropdown-item" onclick="update_director('Christopher Nolan')">Christopher Nolan</button></li>
-                    <li><button class = "dropdown-item" href="">Steven Spielberg</button></li>
-                    <li><button class = "dropdown-item" href="">Martin Scorsese</button></li>
+                    <li><button class = "dropdown-item" onclick="update_director('Steven Spielberg')">Steven Spielberg</button></li>
+                    <li><button class = "dropdown-item" onclick="update_director('Martin Scorsese')">Martin Scorsese</button></li>
                     </ul>
                 </div>
                     
@@ -180,7 +185,7 @@
                     <div class = "row align-self-center">
                         <div class = "col-sm-12 align-self-center">
                             <p>Average star rating : </p>
-                            <img src="images/1stars.png" height="75px" width="300px" id="average_rating_image">
+                            <img src="images/1stars.png" height="75px" width="285px" id="average_rating_image">
                         </div>
                     </div>
                 </div>
@@ -189,6 +194,7 @@
         </div>
         
     </div>
+
 
 
 
