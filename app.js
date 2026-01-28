@@ -10,11 +10,27 @@ const ADMIN_KEY = "m?B)j|fJKq06z]n)";
 
 const VALID_REVIEWS = ["I loved this film","This film was enjoyable","This film was good but not really the type of film I enjoy","I didn't like this film"]
 
+const SYMBOLS = ["''",'""',"*","!","(",")","<",">","@","{","}","^","!",";","#",",","=","+","_","~"];
 app.use(express.json());
 
 app.use(express.static(path.join(__dirname,"Client side")));
 
+// Validates that a given string doesn't contain certain symbols and actually exists
+function validate_string(input){
+   let valid = true;
+   if (!input){
+      return false;
+   }
+   for (let i=0;i<input.length;i++){
+      if (SYMBOLS.includes(input[i])){
+         valid = false;
+      }
+   }
+   return valid;
+}
+function validate_img(input){
 
+}
 
 // Function which adds a new review to the reviews.json file
 function add_review(review){
@@ -64,18 +80,28 @@ app.post("/films/new", function(req,res){
    let is_validated = true;
    if (data.admin_key == ADMIN_KEY){
       let save_data = Object();
-      save_data.title = data.title;
-      save_data.image = data.image;
-      save_data.director = data.director;
-      save_data.average_rating = data.average_rating;
-      save_data.img_src = data.img_src;
-      fs.readFile("./films.json", function(err,data){
-         let original_data = JSON.parse(data);
-         original_data.push(save_data);
-         fs.writeFileSync("./films.json",JSON.stringify(original_data));
-      })
+      is_validated = validate_string(save_data.title);
+      is_validated = validate_string(save_data.director);
+      is_validated = validate_string(save_data.img_src);
+      is_validated = validate_img()
+      is_validated = save_data.average_rating > 0 && save_data.average_rating <= 5;
+
       if (is_validated){
-      res.status(202).send("Film has been added");
+
+         save_data.title = data.title;
+         save_data.image = data.image;
+         save_data.director = data.director;
+         save_data.average_rating = data.average_rating;
+         save_data.img_src = data.img_src;
+         fs.readFile("./films.json", function(err,data){
+            let original_data = JSON.parse(data);
+            original_data.push(save_data);
+            fs.writeFileSync("./films.json",JSON.stringify(original_data));
+         })
+         res.status(201).send("Film has been added");
+      }
+      else{
+         res.status(400).send("Values inputted in incorrect format");
       }
    }
    else{
@@ -87,7 +113,7 @@ app.post("/films/new", function(req,res){
 app.post("/films/update" , function(req,res){
    let data = req.body;
 
-   if (data.average_rating > 0 && data.average_rating < 5){
+   if (data.average_rating > 0 && data.average_rating <= 5){
          fs.readFile("./films.json", function(err,data){
          let original_data = JSON.parse(data);
          for (let i=0;i<original_data.length;i++){
@@ -96,7 +122,7 @@ app.post("/films/update" , function(req,res){
             }
          }
          fs.writeFileSync("./films.json",JSON.stringify(original_data));
-         res.status(201).send("The average rating has been updated");
+         res.status(200).send("The average rating has been updated");
    })
    }
       

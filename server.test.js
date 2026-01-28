@@ -41,7 +41,7 @@ describe("Test all of the POST methods", () => {
             film : "Hello",
             review : "I loved this film",
             rating : 5
-        })
+        });
         expect(response.status).toBe(201);
     })
 })

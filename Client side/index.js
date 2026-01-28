@@ -89,17 +89,14 @@ class Film {
         return this.reviews;
     }
     async get_latest_review(){
-        try{
+
         let url = "http://localhost:3000/reviews/last/" + this.get_title().replace(/ /g,"_")
         const response = await fetch(url);
         if (response.ok){
             const values = await response.json();
             return values.review;
         }
-        }
-        catch{
-            return ("Server Disconnected");
-        }
+        
 
 
     }
@@ -132,6 +129,7 @@ class Review{
 
 
 function clear_director(){
+    current_director = null;
     const director_div = document.getElementById("director_info");
     const director_bar = document.getElementById("director_bar");
     director_div.style.display = "none";
@@ -192,12 +190,9 @@ function update_director(name){
 }
 
 // Function which takes in a list of film objects and displays them on the screen within the film grid
-// Show films first performs the check to see if the server is running
 function show_films(films){
 
     
-
-// Continue show films only runs if the server is running
 
     let counter = 2;
     let i = 0;
@@ -359,7 +354,11 @@ film_form.addEventListener("submit", async function(event){
         }
     }
     else {
-        console.log(response.statusText)
+        const film_alert = document.getElementById("film_alert");
+        const responseBody = await response.text();
+        film_alert.textContent = responseBody;
+        film_alert.style.display = "block";
+
     }
 
 })
@@ -421,6 +420,7 @@ submit_review.addEventListener("click", async function(event){
     }
     let review = new Review(film_title.textContent,user_rating.options[user_rating.selectedIndex].text,rating);
     let json_review = JSON.stringify(review);
+    try{
     const response = await fetch("http://localhost:3000/review/new",{
         method : 'POST',
         headers : {
@@ -451,8 +451,14 @@ submit_review.addEventListener("click", async function(event){
 
     }
     else {
-        clear_modal_review()
-        alert("Problem: ",response.statusText);
+        const review_alert = document.getElementById("review_alert");
+        review_alert.textContent = response.statusText;
+        review_alert.style.display = "block";
+
+    }
+    }
+    catch{
+        console.log("Server offline");
     }
     
 })
@@ -524,6 +530,7 @@ async function update_average_rating(film){
     film.calc_average_rating();
     rating_object.average_rating = film.get_average_rating();
     rating_object.title = film.get_title();
+    console.log(rating_object.average_rating);
     try{
         const response = await fetch("http://localhost:3000/films/update",{
             method : "POST",
@@ -538,11 +545,13 @@ async function update_average_rating(film){
 
     }
     else {
-        alert("Problem: ",response.statusText);
+        const responseBody = await response.text();
+        alert("Problem: ", responseBody);
+        console.log(responseBody);
     }
     }
     catch{
-
+        console.log("Server offline");
     }
 
 }
@@ -597,6 +606,16 @@ function add_all_films(director){
             director.add_film(all_films[i]);
 
     }   
+}
+
+async function check_server(){
+    
+    await fetch("http://localhost:3000/reviews/all").then(() => {
+        console.log("Running");
+    }).catch(() => {
+        console.log("Not running");
+    })
+
 }
 
 function clear_info(){
