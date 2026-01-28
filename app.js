@@ -28,8 +28,21 @@ function validate_string(input){
    }
    return valid;
 }
-function validate_img(input){
 
+// Validates an image link
+function validate_img(input){
+   try {
+      if (input.slice(0,5) == "http:" || input.slice(0,6) == "https:"){
+         return true;
+      }
+      else{
+         return false;
+      }
+   }
+   catch{
+      return false;
+   }
+ 
 }
 
 // Function which adds a new review to the reviews.json file
@@ -51,6 +64,7 @@ function add_review(review){
 app.post("/review/new", function(req,res){
    let is_validated = true;
    let data = req.body;
+   is_validated = validate_string(data.film);
    if (!VALID_REVIEWS.includes(data.review)){
       is_validated = false;
    }
@@ -80,11 +94,21 @@ app.post("/films/new", function(req,res){
    let is_validated = true;
    if (data.admin_key == ADMIN_KEY){
       let save_data = Object();
-      is_validated = validate_string(save_data.title);
-      is_validated = validate_string(save_data.director);
-      is_validated = validate_string(save_data.img_src);
-      is_validated = validate_img()
-      is_validated = save_data.average_rating > 0 && save_data.average_rating <= 5;
+      is_validated = validate_string(data.title);
+
+      is_validated = validate_string(data.director);
+
+      is_validated = validate_string(data.img_src);
+
+      is_validated = validate_img(data.image);
+
+      if (data.average_rating >= 0 && data.average_rating <= 5){
+         is_validated = true;
+      }
+      else{
+         is_validated = false;
+      }
+
 
       if (is_validated){
 

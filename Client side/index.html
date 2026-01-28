@@ -44,12 +44,16 @@
             </div>
 
         </div>
-
+        <div class="alert alert-danger" role="alert" id="review_alert">
+            The values inputted are incorrect
+        </div>
       </div>
+
       <div class="modal-footer">
 
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clear_modal_review()">Close</button>
         <button type="button" class="btn btn-danger" id = "submit_review">Submit review</button>
+
       </div>
     </div>
     </div>
@@ -97,7 +101,7 @@
 
             <div class = "col-sm-7">
             
-            <label for = "admin_key" class = "form_label" >Enter the admin key</label>
+            <label for = "admin_key" class = "form_label">Enter the admin key</label>
             <br>
             <input class = "form_control" id = "admin_key" aria-describedby="admin_description" name="admin_key"type="password">
             <div id="admin_description" class = "form-text">Only admins can create new films</div>
@@ -138,7 +142,7 @@
     <hr class = "separator-line">
 
     <div class = "container text-center"  style = "padding-right:15%;padding-left: 5%;">
-        <div class = "row"  >
+        <div class = "row mb-3">
             
             <div class = "col-sm-8 align-self-center" style = "font-size: xx-large;">
                 Films | Directors | Reviews
@@ -165,11 +169,19 @@
 
             </div>
         </div>
+        <div class = "row">
+        <div class="alert alert-danger" role="alert" id="home_alert">
+        The server isn't running right now please try again later
+    
+        </div>
+        </div>
     </div>
     <hr class = "separator-line">
-
+  
 
     <div class = "container text-center" id ="director_info">
+
+
         <div class="row">
             <div class = "col-sm-4 align-self-center" style = "font-size:medium;">
                 

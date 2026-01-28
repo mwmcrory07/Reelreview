@@ -89,13 +89,17 @@ class Film {
         return this.reviews;
     }
     async get_latest_review(){
-
+        try{
         let url = "http://localhost:3000/reviews/last/" + this.get_title().replace(/ /g,"_")
         const response = await fetch(url);
         if (response.ok){
             const values = await response.json();
             return values.review;
         }
+    }
+    catch{
+        return false;
+    }
         
 
 
@@ -143,17 +147,12 @@ function clear_director(){
 // Function which for a given director displays their information and then the corresponding films
 function update_director(name){
 
-    const director_div = document.getElementById("director_info");
-    const director_bar = document.getElementById("director_bar");
-
-    
 
     let found = false;
     let pointer = 0;
     while (found == false){
     
         if (directors[pointer].get_name() == name){
-            console.log(directors[pointer]);
             found = true;
   
         }
@@ -163,8 +162,16 @@ function update_director(name){
 
     }
     let director = directors[pointer];
+
     add_all_films(director);
     director.calc_average_rating();
+    show_films(director.get_films());
+    current_director = director;
+    const director_div = document.getElementById("director_info");
+    const director_bar = document.getElementById("director_bar");
+
+    
+
 
     const director_description = document.getElementById("director_description");
     director_description.innerHTML = director.get_description();
@@ -184,16 +191,27 @@ function update_director(name){
     
     director_bar.style.display = "block";
     
-    show_films(director.get_films());
-    current_director = director;
+
   
 }
 
 // Function which takes in a list of film objects and displays them on the screen within the film grid
-function show_films(films){
-
-    
-
+async function show_films(films){
+    try{
+    let server_online = await films[0].get_latest_review();
+    if (server_online) {
+        continue_show_films(films);
+    }
+    else{
+        document.getElementById("home_alert").style.display = "block";
+    }
+    }
+    catch{
+        return;
+    }
+}
+function continue_show_films(films){
+    document.getElementById("home_alert").style.display = "none";
     let counter = 2;
     let i = 0;
     const films_grid =  document.getElementById("films_grid");
@@ -289,13 +307,15 @@ function show_films(films){
         })
         review_button.textContent = "Write review";
         button_col.appendChild(review_button);
-
-    
     }
-}
+    }
 
 
-const modal_review = new bootstrap.Modal(document.getElementById("review_modal"));
+
+const modal_review = new bootstrap.Modal(document.getElementById("review_modal"),{
+    keyboard : false,
+    backdrop : "static"
+});
 // Function to handle the displaying of the popup modal for the review
 function write_review(film){
     const film_title = document.getElementById("film_title");
@@ -304,24 +324,32 @@ function write_review(film){
 }
 
 // Function to handle the displaying of the popuo modal for the film
-const modal_film = new bootstrap.Modal(document.getElementById("film_modal"));
+const modal_film = new bootstrap.Modal(document.getElementById("film_modal"),{
+    keyboard : false,
+    backdrop : "static"
+});
 function add_film(){
     modal_film.toggle();
 }
 
-
+// Reset the modal for the film after its closed
 function clear_modal_film(){
     document.getElementById("new_title").value = "";
     document.getElementById("new_image").value = "";
     document.getElementById("new_director").value = "";
     document.getElementById("new_image_src").value = "";
     document.getElementById("admin_key").value = "";
+    document.getElementById("film_alert").style.display = "none";
 }
 
+// Reset the modal for tge film after its closed
 function clear_modal_review(){
     update_stars(1);
+    document.getElementById("review_alert").style.display = "none";
 }
 const film_form = document.getElementById("film_form");
+
+
 
 // Function for sending a post request to the server when the new film made
 film_form.addEventListener("submit", async function(event){
@@ -329,6 +357,7 @@ film_form.addEventListener("submit", async function(event){
     const film_data = new FormData(film_form);
     let js_data = Object.fromEntries((film_data.entries()));
     js_data.average_rating = 0;
+    try{
     const response = await fetch("http://localhost:3000/films/new",
         {
             method : "POST",
@@ -360,6 +389,13 @@ film_form.addEventListener("submit", async function(event){
         film_alert.style.display = "block";
 
     }
+    }
+    catch{
+        const film_alert = document.getElementById("film_alert");
+        film_alert.textContent = "The server isn't running right now please try again later";
+        film_alert.style.display = "block";
+    }
+
 
 })
 
@@ -458,7 +494,9 @@ submit_review.addEventListener("click", async function(event){
     }
     }
     catch{
-        console.log("Server offline");
+        const review_alert = document.getElementById("review_alert");
+        review_alert.textContent = "The server isn't running right now please try again later";
+        review_alert.style.display = "block";
     }
     
 })
