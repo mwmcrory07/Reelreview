@@ -94,27 +94,18 @@
                 <input type = "text" class = "form_control" id = "new_image_src" name="img_src">
                 </div>
             </div>
-            <hr>
+    
             </div>
             <div class = "row">
 
 
-            <div class = "col-sm-7">
-            
-            <label for = "admin_key" class = "form_label">Enter the admin key</label>
-            <br>
-            <input class = "form_control" id = "admin_key" aria-describedby="admin_description" name="admin_key"type="password">
-            <div id="admin_description" class = "form-text">Only admins can create new films</div>
-            </div>
-            <div class = "col-sm-5 align-self-center">
-            <button type="submit" class="btn btn-danger" id = "submit_film">Submit film</button>
-            </div>
-            </div>
-        </form>
-        <div class="modal-footer">
         <div class="alert alert-danger" role="alert" id="film_alert">
             The values inputted are incorrect
         </div>
+        </form>
+        <div class="modal-footer">
+
+        <button type="submit" class="btn btn-danger" id = "submit_film">Submit film</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="clear_modal_film()">Close</button>
         
         </div>

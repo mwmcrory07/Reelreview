@@ -89,28 +89,26 @@ app.post("/review/new", function(req,res){
 // POST method for adding a new film to the server
 app.post("/films/new", function(req,res){
    let data = req.body;
-   // Check to see if the request was sent by someone with access to admin code before storing data
 
    let is_validated = true;
-   if (data.admin_key == ADMIN_KEY){
-      let save_data = Object();
-      is_validated = validate_string(data.title);
 
-      is_validated = validate_string(data.director);
+   let save_data = Object();
 
-      is_validated = validate_string(data.img_src);
+   if (data.average_rating >= 0 && data.average_rating <= 5){
+      is_validated = true;
+   }
+   else{
+      is_validated = false;
+   }
+   is_validated = validate_string(data.title);
 
-      is_validated = validate_img(data.image);
+   is_validated = validate_string(data.director);
 
-      if (data.average_rating >= 0 && data.average_rating <= 5){
-         is_validated = true;
-      }
-      else{
-         is_validated = false;
-      }
+   is_validated = validate_string(data.img_src);
 
+   is_validated = validate_img(data.image);
 
-      if (is_validated){
+      if(is_validated){
 
          save_data.title = data.title;
          save_data.image = data.image;
@@ -128,21 +126,18 @@ app.post("/films/new", function(req,res){
          res.status(400).send("Values inputted in incorrect format");
       }
    }
-   else{
-      res.status(400).send("Incorrect admin key");
-   }
-})
+)
 
 // POST method for updating the value of the average rating on the server
 app.post("/films/update" , function(req,res){
-   let data = req.body;
+   let client_data = req.body;
 
-   if (data.average_rating > 0 && data.average_rating <= 5){
+   if (client_data.average_rating > 0 && client_data.average_rating <= 5){
          fs.readFile("./films.json", function(err,data){
          let original_data = JSON.parse(data);
          for (let i=0;i<original_data.length;i++){
-            if(data.title == original_data[i].title){
-               original_data.average_rating = data.average_rating;
+            if(client_data.title == original_data[i].title){
+               original_data[i].average_rating = client_data.average_rating;
             }
          }
          fs.writeFileSync("./films.json",JSON.stringify(original_data));

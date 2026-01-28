@@ -268,13 +268,14 @@ function continue_show_films(films){
         info_col.appendChild(film_title);
 
         const film_director = document.createElement("p");
-        film_director.textContent = film.get_director();
+        film_director.textContent = "Directed by : " + film.get_director();
         info_col.appendChild(film_director);
 
 
         const star_img = document.createElement("img");
         star_img.setAttribute("height","50px");
         star_img.setAttribute("width","200px");
+        film.calc_average_rating();
         star_img.setAttribute("src",stars_dictionary[film.get_average_rating()]);
         info_col.appendChild(star_img);
 
@@ -338,7 +339,6 @@ function clear_modal_film(){
     document.getElementById("new_image").value = "";
     document.getElementById("new_director").value = "";
     document.getElementById("new_image_src").value = "";
-    document.getElementById("admin_key").value = "";
     document.getElementById("film_alert").style.display = "none";
 }
 
@@ -420,7 +420,6 @@ function update_stars(number){
             let num_str = String(number);
             let star_str = "star" + num_str ;
             let star = document.getElementById(star_str);
-            console.log(star_str)
             star.style.color = "black";
             star_states[number] = 0;
             number = number + 1;
@@ -447,9 +446,7 @@ submit_review.addEventListener("click", async function(event){
     let rating = 0;
     while (star_counter > 0 && !found){
         if (star_states[star_counter] == 1){
-            console.log(star_states[star_counter]);
             rating = star_counter;
-            console.log(rating);
             found = true;
         }
         star_counter = star_counter - 1
@@ -568,7 +565,7 @@ async function update_average_rating(film){
     film.calc_average_rating();
     rating_object.average_rating = film.get_average_rating();
     rating_object.title = film.get_title();
-    console.log(rating_object.average_rating);
+
     try{
         const response = await fetch("http://localhost:3000/films/update",{
             method : "POST",
