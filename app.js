@@ -94,20 +94,13 @@ app.post("/films/new", function(req,res){
 
    let save_data = Object();
 
-   if (data.average_rating >= 0 && data.average_rating <= 5){
+   if (validate_string(data.title) && validate_string(data.director) && validate_string(data.img_src) && validate_img(data.image) && data.average_rating >= 0 && data.average_rating <= 5){
       is_validated = true;
    }
    else{
       is_validated = false;
    }
-   is_validated = validate_string(data.title);
-
-   is_validated = validate_string(data.director);
-
-   is_validated = validate_string(data.img_src);
-
-   is_validated = validate_img(data.image);
-
+ 
       if(is_validated){
 
          save_data.title = data.title;
@@ -135,13 +128,20 @@ app.post("/films/update" , function(req,res){
    if (client_data.average_rating > 0 && client_data.average_rating <= 5){
          fs.readFile("./films.json", function(err,data){
          let original_data = JSON.parse(data);
+         let found = false;
          for (let i=0;i<original_data.length;i++){
             if(client_data.title == original_data[i].title){
                original_data[i].average_rating = client_data.average_rating;
+               found = true;
             }
          }
+         if (found){
          fs.writeFileSync("./films.json",JSON.stringify(original_data));
          res.status(200).send("The average rating has been updated");
+         }
+         else{
+            res.status(400).send("That film doesnt exist");
+         }
    })
    }
       
