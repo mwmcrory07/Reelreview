@@ -5,8 +5,6 @@ A website where users can browse films and reviews, add new films, and write the
 ## Install and run
 
 ```bash
-git clone [your repo URL]
-cd [repo folder name]
 npm install
 npm start
 ```
