@@ -1,5 +1,3 @@
-
-
 class Director {
     constructor(name,image,description,average_rating,image_src){
         this.name = name;
